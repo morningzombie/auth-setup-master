@@ -1,0 +1,19 @@
+body {
+  font-family: sans-serif;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form > * {
+  margin: 1rem;
+}
+
+input, button {
+  height: 2rem;
+}
+.error {
+  color: red;
+}
