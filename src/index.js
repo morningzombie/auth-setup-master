@@ -12,14 +12,53 @@ const App = ()=> {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  useEffect(()=>{
+    findUserFromToken();
+  }, []);
+
+  const findUserFromToken=()=>{
+    const token = window.localStorage.getItem('token');
+    if(!token){
+      return;
+    }
+    axios.get('api/auth', {
+      headers: {
+      authentication: token
+    }
+    })
+    .then(response => setAuth(response.data))
+    .catch(ex=console.log(ex))
+   
+    console.log(token)
+  }
+
   const onSubmit = async(ev)=> {
     ev.preventDefault();
     const credentials = {
       username,
       password
     };
-    console.log(credentials);
+    // console.log(credentials);
+
+    axios.post('/api/auth', credentials)
+    .then(response=>{
+      //console.log(response.data.token)
+      window.localStorage.setItem('token', response.data.token);
+      findUserFromToken();
+    })
+    .catch(ex => {
+      //console.log(ex));
+      setError('bad credentials');
+    })
   };
+
+const logout = ()=>{
+  window.localStorage.removeItem('token')
+setAuth({});
+setError('');
+setUsername('');
+setPassword('');
+};
 
   return (
     <div>
